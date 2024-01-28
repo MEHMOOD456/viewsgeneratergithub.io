@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenerateViews</title>
+    <style type="text/css">
+        body{
+            margin: 0;
+        }
+        .bgimage{
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-image:url('IMAGE/1.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            animation: bgchange 20s linear infinite;
+        }
+        @keyframes bgchange{
+            0%{
+                background-image: url('IMAGE/1.jpg');
+            }
+            20%{
+                background-image: url('IMAGE/2.jpg');
+            }
+            25%{
+                background-image: url('IMAGE/3.jpg');
+            }
+            45%{
+                background-image: url('IMAGE/4.jpg');
+            }
+            50%{
+                background-image: url('IMAGE/5.jpg');
+            }
+            70%{
+                background-image: url('IMAGE/6.jpg');
+            }
+            75%{
+                background-image: url('IMAGE/7.jpg');
+            }
+        }
+    
+        .overlay{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: (0,0,0,0.3);
+        }
+        .content{
+            position: relative;
+            width: 100%;
+            height: 100%;
+            color: white;
+            display: flex ;
+            justify-content: center ;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2;
+
+        }
+        .content h1{
+            font-size: 60px;
+            margin-bottom: 0px;
+            color: #ffffff;
+        }
+        .content p{
+         font-size: 18px;
+         width: 60%;
+         padding-bottom: 10px;
+         text-align: center;
+        }
+        .content button{
+            color: black;
+            border: none;
+            outline: none;
+            font-size: 10px;
+            background-color: white;
+            padding: 14px 22px;
+            text-transform: "uppercase";
+            border-radius: 25px;
+            transition: .5s;
+            font-weight: bold;
+        }
+        .content button:hover{
+            background-color:black;
+            color: white;
+
+        }
+        h1 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            color: #fffefe;
+        }
+
+        label.bold {
+            font-weight: bold; /* Add bold style to the label */
+        }
+
+        input {
+            padding: 5px;
+            border-color: #000000;
+            margin: 5px 0 15px 0;
+            width: 60%;
+            box-sizing: border-box;
+            border-radius: 5px; /* Round the border */
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Add animation effect */
+        }
+
+        button:hover {
+            filter: brightness(1.2); /* Add brightness effect on hover */
+        }
+
+        button.green:hover {
+            background-color: #4caf50; /* Green color on hover */
+            color: white;
+        }
+
+        button.red:hover {
+            background-color: #f44336; /* Red color on hover */
+            color: white;
+        }
+
+        p {
+            color: #ffffff;
+        }
+
+       
+
+        iframe {
+            width: 80%;
+            height: 300px;
+            border: 1px solid #ddd;
+            margin: 20px auto;
+            display: none; /* Hide the iframe initially */
+            border-radius: 5px; /* Round the border */
+        }
+    </style>
+</head>
+    </style>
+</head>
+<body>
+    <div class="bgimage">
+        <div class="content">
+            <h1> Views<span> Generater</span></h1>
+            <p><label for="link">Enter the link:</label>
+                <input type="text" id="link" placeholder="Enter your link">
+                <br>
+                <label class="bold" for="viewsCount">Enter the number of views to simulate:</label>
+                <input type="number" id="viewsCount" placeholder="Enter views count">
+                <br>
+                <label class="bold" for="timeInterval">Enter the time interval between views (in seconds):</label>
+                <input type="number" id="timeInterval" placeholder="Enter time interval">
+                <br>
+                <button class="green" onclick="generateViews()">Generate Views</button>
+                <button class="red" id="closeButton" onclick="closeIframe()">Close Iframe</button>
+                <p id="completedViews">Completed Views: 0</p>
+                <iframe id="viewIframe" frameborder="0" scrolling="no"></iframe>
+            
+                <script>
+                    var stopGeneration = false; // Variable to track whether to stop view generation
+            
+                    function generateViews() {
+                        var link = document.getElementById("link").value;
+                        var viewsCount = document.getElementById("viewsCount").value;
+                        var timeInterval = document.getElementById("timeInterval").value;
+                        var completedViews = 0;
+            
+                        function simulateView() {
+                            if (stopGeneration) {
+                                return; // Stop generating views if the flag is set
+                            }
+            
+                            completedViews++;
+                            document.getElementById("completedViews").innerText = "Completed Views: " + completedViews;
+            
+                            if (completedViews <= viewsCount) {
+                                document.getElementById("viewIframe").src = link;
+            
+                                // Automatically scroll up and down in the iframe
+                                var iframe = document.getElementById("viewIframe");
+                                iframe.contentWindow.scrollBy(0, 100); // Scroll down
+                                setTimeout(function() {
+                                    iframe.contentWindow.scrollBy(0, -100); // Scroll up
+                                    setTimeout(simulateView, timeInterval * 1000);
+                                }, 1000);
+                            } else {
+                                alert(`Successfully generated ${viewsCount} views for ${link}.`);
+                            }
+                        }
+            
+                        // Show the iframe and start simulation when the button is clicked
+                        document.getElementById("viewIframe").style.display = "block";
+                        alert(`Generating ${viewsCount} views for ${link} with a ${timeInterval}-second interval and autoscroll...`);
+                        simulateView();
+                    }
+            
+                    function closeIframe() {
+                        stopGeneration = true; // Set the flag to stop view generation
+                        document.getElementById("viewIframe").style.display = "none"; // Hide the iframe
+            
+                        // Clear input values
+                        document.getElementById("link").value = "";
+                        document.getElementById("viewsCount").value = "";
+                        document.getElementById("timeInterval").value = "";
+                    }
+                </script>
+            </body></p>
+            <button> Contact now:</button>
+        </div>
+    </div>
+    
+</body>
+</html>
